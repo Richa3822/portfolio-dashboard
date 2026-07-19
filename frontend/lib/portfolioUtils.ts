@@ -22,3 +22,10 @@ export function getSectorSummaries(portfolio: EnrichedStock[]): SectorSummary[] 
     return { sector, investment, presentValue, gainLoss: presentValue - investment };
   });
 }
+
+export function getPortfolioTotals(portfolio: EnrichedStock[]) {
+  const totalInvestment = portfolio.reduce((sum, s) => sum + s.investment, 0);
+  const totalPresentValue = portfolio.reduce((sum, s) => sum + (s.presentValue ?? 0), 0);
+  const totalGainLoss = totalPresentValue - totalInvestment;
+  return { totalInvestment, totalPresentValue, totalGainLoss };
+}
