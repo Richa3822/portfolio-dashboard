@@ -5,12 +5,13 @@ import { EnrichedStock } from '@/lib/types';
 import { groupBySector, sortStocks, SortKey, SortDirection } from '@/lib/portfolioUtils';
 import { GainLossCell } from './GainLossCell';
 import { SortableHeader } from './SortableHeader';
+import { FlashMap } from '@/hooks/useSocket';
 
 function formatNum(value: number | null, decimals = 2) {
   return value !== null ? value.toFixed(decimals) : 'N/A';
 }
 
-export function PortfolioTable({ portfolio }: { portfolio: EnrichedStock[] }) {
+export function PortfolioTable({ portfolio, flashMap }: { portfolio: EnrichedStock[]; flashMap: FlashMap }) {
   const [sortKey, setSortKey] = useState<SortKey | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
@@ -21,6 +22,11 @@ export function PortfolioTable({ portfolio }: { portfolio: EnrichedStock[] }) {
       setSortKey(key);
       setSortDirection('asc');
     }
+  }
+
+  function flashClass(stockId: number, field: 'cmp' | 'presentValue' | 'gainLoss') {
+    const changed = flashMap[stockId]?.has(field);
+    return changed ? 'transition-colors duration-700 bg-blue-50' : 'transition-colors duration-700';
   }
 
   const sectors = groupBySector(portfolio);
@@ -64,9 +70,12 @@ export function PortfolioTable({ portfolio }: { portfolio: EnrichedStock[] }) {
                       <td className="px-5 py-2.5 text-gray-600">{stock.investment.toFixed(2)}</td>
                       <td className="px-5 py-2.5 text-gray-600">{stock.portfolioPercent.toFixed(2)}%</td>
                       <td className="px-5 py-2.5 text-gray-600">{stock.nseSymbol}</td>
-                      <td className="px-5 py-2.5 text-gray-600">{formatNum(stock.cmp)}</td>
-                      <td className="px-5 py-2.5 text-gray-600">{formatNum(stock.presentValue)}</td>
-                      <td className="px-5 py-2.5"><GainLossCell value={stock.gainLoss} /></td>
+
+                      {/* these three are the only lines that changed */}
+                      <td className={`px-5 py-2.5 text-gray-600 ${flashClass(stock.id, 'cmp')}`}>{formatNum(stock.cmp)}</td>
+                      <td className={`px-5 py-2.5 text-gray-600 ${flashClass(stock.id, 'presentValue')}`}>{formatNum(stock.presentValue)}</td>
+                      <td className={`px-5 py-2.5 ${flashClass(stock.id, 'gainLoss')}`}><GainLossCell value={stock.gainLoss} /></td>
+
                       <td className="px-5 py-2.5 text-gray-600">{formatNum(stock.peRatio)}</td>
                       <td className="px-5 py-2.5 text-gray-600">{formatNum(stock.eps)}</td>
                     </tr>

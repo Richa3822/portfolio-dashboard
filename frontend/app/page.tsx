@@ -16,7 +16,7 @@ function StatCard({ label, value, tone }: { label: string; value: string; tone?:
 }
 
 export default function DashboardPage() {
-  const { portfolio, connected } = usePortfolioSocket();
+  const { portfolio, connected, flashMap } = usePortfolioSocket();
   const sectorSummaries = getSectorSummaries(portfolio);
   const totals = getPortfolioTotals(portfolio);
 
@@ -51,7 +51,7 @@ export default function DashboardPage() {
             <SectorChart data={sectorSummaries} />
           </div>
 
-          <PortfolioTable portfolio={portfolio} />
+          <PortfolioTable portfolio={portfolio} flashMap={flashMap}/>
         </>
       )}
     </main>
