@@ -1,25 +1,37 @@
+'use client';
+
+import { useState } from 'react';
 import { EnrichedStock } from '@/lib/types';
+import { groupBySector, sortStocks, SortKey, SortDirection } from '@/lib/portfolioUtils';
 import { GainLossCell } from './GainLossCell';
+import { SortableHeader } from './SortableHeader';
 
 function formatNum(value: number | null, decimals = 2) {
   return value !== null ? value.toFixed(decimals) : 'N/A';
 }
 
 export function PortfolioTable({ portfolio }: { portfolio: EnrichedStock[] }) {
-  // group stocks by sector
-  const sectors = portfolio.reduce<Record<string, EnrichedStock[]>>((acc, stock) => {
-    (acc[stock.sector] ??= []).push(stock);
-    return acc;
-  }, {});
+  const [sortKey, setSortKey] = useState<SortKey | null>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+
+  function handleSort(key: SortKey) {
+    if (sortKey === key) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortKey(key);
+      setSortDirection('asc');
+    }
+  }
+
+  const sectors = groupBySector(portfolio);
 
   return (
     <div className="space-y-6">
       {Object.entries(sectors).map(([sectorName, stocks]) => {
         const sectorInvestment = stocks.reduce((sum, s) => sum + s.investment, 0);
-        const sectorPresentValue = stocks.reduce(
-          (sum, s) => sum + (s.presentValue ?? 0), 0
-        );
+        const sectorPresentValue = stocks.reduce((sum, s) => sum + (s.presentValue ?? 0), 0);
         const sectorGainLoss = sectorPresentValue - sectorInvestment;
+        const displayStocks = sortKey ? sortStocks(stocks, sortKey, sortDirection) : stocks;
 
         return (
           <div key={sectorName} className="bg-white border border-gray-200 rounded-xl overflow-hidden">
@@ -30,21 +42,21 @@ export function PortfolioTable({ portfolio }: { portfolio: EnrichedStock[] }) {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="text-left text-xs text-gray-500 border-b border-gray-100">
-                    <th className="px-5 py-2 font-medium">Stock</th>
+                    <SortableHeader label="Stock" sortKey="name" activeSortKey={sortKey} direction={sortDirection} onSort={handleSort} />
                     <th className="px-5 py-2 font-medium">Purchase price</th>
                     <th className="px-5 py-2 font-medium">Qty</th>
-                    <th className="px-5 py-2 font-medium">Investment</th>
-                    <th className="px-5 py-2 font-medium">Portfolio %</th>
+                    <SortableHeader label="Investment" sortKey="investment" activeSortKey={sortKey} direction={sortDirection} onSort={handleSort} />
+                    <SortableHeader label="Portfolio %" sortKey="portfolioPercent" activeSortKey={sortKey} direction={sortDirection} onSort={handleSort} />
                     <th className="px-5 py-2 font-medium">NSE/BSE</th>
-                    <th className="px-5 py-2 font-medium">CMP</th>
-                    <th className="px-5 py-2 font-medium">Present value</th>
-                    <th className="px-5 py-2 font-medium">Gain/Loss</th>
-                    <th className="px-5 py-2 font-medium">P/E ratio</th>
-                    <th className="px-5 py-2 font-medium">EPS</th>
+                    <SortableHeader label="CMP" sortKey="cmp" activeSortKey={sortKey} direction={sortDirection} onSort={handleSort} />
+                    <SortableHeader label="Present value" sortKey="presentValue" activeSortKey={sortKey} direction={sortDirection} onSort={handleSort} />
+                    <SortableHeader label="Gain/Loss" sortKey="gainLoss" activeSortKey={sortKey} direction={sortDirection} onSort={handleSort} />
+                    <SortableHeader label="P/E ratio" sortKey="peRatio" activeSortKey={sortKey} direction={sortDirection} onSort={handleSort} />
+                    <SortableHeader label="EPS" sortKey="eps" activeSortKey={sortKey} direction={sortDirection} onSort={handleSort} />
                   </tr>
                 </thead>
                 <tbody>
-                  {stocks.map((stock) => (
+                  {displayStocks.map((stock) => (
                     <tr key={stock.id} className="border-b border-gray-50 last:border-0 hover:bg-gray-50">
                       <td className="px-5 py-2.5 font-medium text-gray-900">{stock.name}</td>
                       <td className="px-5 py-2.5 text-gray-600">{stock.purchasePrice}</td>
@@ -71,7 +83,7 @@ export function PortfolioTable({ portfolio }: { portfolio: EnrichedStock[] }) {
               </table>
             </div>
           </div>
-        );  
+        );
       })}
     </div>
   );

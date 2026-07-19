@@ -29,3 +29,25 @@ export function getPortfolioTotals(portfolio: EnrichedStock[]) {
   const totalGainLoss = totalPresentValue - totalInvestment;
   return { totalInvestment, totalPresentValue, totalGainLoss };
 }
+
+// --- Sorting ---
+
+export type SortKey = 'name' | 'investment' | 'portfolioPercent' | 'cmp' | 'presentValue' | 'gainLoss' | 'peRatio' | 'eps';
+export type SortDirection = 'asc' | 'desc';
+
+export function sortStocks(stocks: EnrichedStock[], key: SortKey, direction: SortDirection): EnrichedStock[] {
+  const sorted = [...stocks].sort((a, b) => {
+    const aVal = a[key];
+    const bVal = b[key];
+
+    if (aVal === null) return 1;
+    if (bVal === null) return -1;
+
+    if (typeof aVal === 'string') {
+      return aVal.localeCompare(bVal as string);
+    }
+    return (aVal as number) - (bVal as number);
+  });
+
+  return direction === 'asc' ? sorted : sorted.reverse();
+}
