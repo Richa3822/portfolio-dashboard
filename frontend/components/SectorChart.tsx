@@ -7,11 +7,11 @@ import { SectorSummary } from '@/lib/portfolioUtils';
 
 export function SectorChart({ data }: { data: SectorSummary[] }) {
   return (
-    <div className="w-full h-80 mb-8">
+    <div className="w-full h-64 sm:h-80 mb-8">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="sector" tick={{ fontSize: 12 }} />
+          <XAxis dataKey="sector" tick={{ fontSize: 11 }} angle={-15} textAnchor="end" height={50} />
           <YAxis />
           <Tooltip formatter={(value) => (typeof value === 'number' ? value.toFixed(2) : String(value ?? ''))} />
           <Legend />

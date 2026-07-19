@@ -44,8 +44,8 @@ export function PortfolioTable({ portfolio, flashMap }: { portfolio: EnrichedSto
             <div className="px-5 py-3 border-b border-gray-100">
               <h3 className="text-sm font-medium text-gray-900">{sectorName}</h3>
             </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
+            <div className="overflow-x-auto -mx-5 px-5 sm:mx-0 sm:px-0">
+              <table className="w-full text-sm min-w-[900px]">
                 <thead>
                   <tr className="text-left text-xs text-gray-500 border-b border-gray-100">
                     <SortableHeader label="Stock" sortKey="name" activeSortKey={sortKey} direction={sortDirection} onSort={handleSort} />

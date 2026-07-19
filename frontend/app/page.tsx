@@ -23,9 +23,9 @@ export default function DashboardPage() {
   const fmt = (n: number) => `₹${n.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
 
   return (
-    <main className="max-w-6xl mx-auto p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-medium text-gray-900">Portfolio dashboard</h1>
+    <main className="max-w-6xl mx-auto p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-6">
+        <h1 className="text-xl sm:text-2xl font-medium text-gray-900">Portfolio dashboard</h1>
         <span className={`flex items-center gap-1.5 text-sm ${connected ? 'text-green-600' : 'text-red-600'}`}>
           <span className={`w-2 h-2 rounded-full ${connected ? 'bg-green-500' : 'bg-red-500'}`} />
           {connected ? 'Live' : 'Disconnected'}
@@ -51,7 +51,7 @@ export default function DashboardPage() {
             <SectorChart data={sectorSummaries} />
           </div>
 
-          <PortfolioTable portfolio={portfolio} flashMap={flashMap}/>
+          <PortfolioTable portfolio={portfolio} flashMap={flashMap} />
         </>
       )}
     </main>
