@@ -81,12 +81,13 @@ export function PortfolioTable({ portfolio, flashMap }: { portfolio: EnrichedSto
                     </tr>
                   ))}
                   <tr className="bg-gray-50 font-medium">
-                    <td className="px-5 py-2.5" colSpan={3}>Sector total</td>
-                    <td className="px-5 py-2.5">{sectorInvestment.toFixed(2)}</td>
-                    <td className="px-5 py-2.5" colSpan={2}></td>
-                    <td className="px-5 py-2.5">{sectorPresentValue.toFixed(2)}</td>
-                    <td className="px-5 py-2.5"><GainLossCell value={sectorGainLoss} /></td>
-                    <td className="px-5 py-2.5" colSpan={2}></td>
+                    <td className="px-5 py-2.5 bg-gray-50" colSpan={3}>Sector total</td>
+                    <td className="px-5 py-2.5 bg-gray-50">{sectorInvestment.toFixed(2)}</td>
+                    <td className="px-5 py-2.5 bg-gray-50" colSpan={2}>&nbsp;</td>
+                    <td className="px-5 py-2.5 bg-gray-50">{sectorPresentValue.toFixed(2)}</td>
+                    <td className="px-5 py-2.5 bg-gray-50"><GainLossCell value={sectorGainLoss} /></td>
+                    <td className="px-5 py-2.5 bg-gray-50" colSpan={2}>&nbsp;</td>
+                    <td className="px-5 py-2.5 bg-gray-50" colSpan={2}>&nbsp;</td>
                   </tr>
                 </tbody>
               </table>
