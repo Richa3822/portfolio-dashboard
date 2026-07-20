@@ -39,8 +39,7 @@ export function usePortfolioSocket() {
   const previousPortfolioRef = useRef<EnrichedStock[]>([]);
 
   useEffect(() => {
-    const socket: Socket = io('http://localhost:4000');
-
+    const socket: Socket = io(process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:4000');
     socket.on('connect', () => setConnected(true));
     socket.on('disconnect', () => setConnected(false));
 
